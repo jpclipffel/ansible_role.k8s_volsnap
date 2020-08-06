@@ -1,0 +1,32 @@
+# code: language=Ansible insertSpaces=true tabSize=2
+
+- name: Assertions
+  assert:
+    that:
+      - k8s_primary_master_name is defined
+      - k8s_node_type is defined
+  tags: [never, apply, delete]
+
+
+- name: Apply Volume Snapshot CRDs and Controller
+  k8s:
+    state: present
+    definition: "{{ lookup('template', item) | from_yaml_all | list }}" 
+  with_fileglob:
+    - "../templates/{{ k8s_volsnap_version }}/crd/*.yaml"
+    - "../templates/{{ k8s_volsnap_version }}/controller/*yaml.j2"
+  when:
+    - inventory_hostname == k8s_primary_master_name
+  tags: [apply]
+
+
+- name: Delete Volume Snapshot CRDs and Controller
+  k8s:
+    state: absent
+    definition: "{{ lookup('template', item) |  from_yaml_all | list  }}" 
+  with_fileglob:
+    - "../templates/{{ k8s_volsnap_version }}/crd/*.yaml"
+    - "../templates/{{ k8s_volsnap_version }}/controller/*.yaml.j2"
+  when:
+    - inventory_hostname == k8s_primary_master_name
+  tags: [delete]

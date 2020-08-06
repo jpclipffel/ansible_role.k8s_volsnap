@@ -1,0 +1,2 @@
+k8s_volsnap_version: "release-2.1"
+k8s_volsnap_namespace: "kube-system"

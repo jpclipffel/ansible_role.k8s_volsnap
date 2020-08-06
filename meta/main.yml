@@ -1,0 +1,3 @@
+galaxy_info:
+  role_name: k8s_volsnap
+  description: Ansible role to manage Volume Snapshot CRDs and Volume Snapshot Controller on Kubernetes clusters.
